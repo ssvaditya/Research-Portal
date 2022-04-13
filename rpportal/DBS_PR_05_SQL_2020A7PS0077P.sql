@@ -1,3 +1,32 @@
+CREATE TABLE `portal_department` (
+  `deptId` varchar(10) NOT NULL,
+  `deptName` varchar(100) NOT NULL,
+  PRIMARY KEY (`deptId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `portal_project` (
+  `projectId` varchar(10) NOT NULL,
+  `projectName` varchar(200) NOT NULL,
+  `projectDesc` varchar(1000) NOT NULL,
+  `projectField` varchar(500) NOT NULL,
+  `projectStatus` varchar(100) NOT NULL,
+  `numberOfCurrentApplicants` int NOT NULL,
+  `profId` varchar(100) NOT NULL,
+  `maxNumberOfApplicants` int NOT NULL,
+  PRIMARY KEY (`projectId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `portal_professor` (
+  `profId` varchar(10) NOT NULL,
+  `profName` varchar(100) NOT NULL,
+  `deptId` varchar(100) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `extraInfo` varchar(100) NOT NULL,
+  `ResearchInterest` longtext NOT NULL DEFAULT (_utf8mb3''),
+  PRIMARY KEY (`profId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 INSERT INTO `dbsproject`.`portal_department` (`deptId`, `deptName`) VALUES ('CS', 'Computer Science');
 INSERT INTO `dbsproject`.`portal_department` (`deptId`, `deptName`) VALUES ('EEE', 'Electrical ');
 INSERT INTO `dbsproject`.`portal_department` (`deptId`, `deptName`) VALUES ('MECH', 'Mechanical');
@@ -92,4 +121,72 @@ INSERT INTO `dbsproject`.`portal_project` (`projectId`, `projectName`, `projectD
 INSERT INTO `dbsproject`.`portal_project` (`projectId`, `projectName`, `projectDesc`, `projectField`, `projectStatus`, `profId`, `numberOfCurrentApplicants`, `maxNumberOfApplicants`) VALUES ('MECH7', ' A study on methods of planning in industrial sector.', 'Operations Management', 'Mechanical', 'RECRUITING', 'MECH4', '1', '7');
 INSERT INTO `dbsproject`.`portal_project` (`projectId`, `projectName`, `projectDesc`, `projectField`, `projectStatus`, `profId`, `numberOfCurrentApplicants`, `maxNumberOfApplicants`) VALUES ('MECH8', ' Characterization of surface errors in machining of thin-walled curved geometries', 'Surface errors', 'Mechanical', 'RECRUITING', 'MECH5', '2', '9');
 INSERT INTO `dbsproject`.`portal_project` (`projectId`, `projectName`, `projectDesc`, `projectField`, `projectStatus`, `profId`, `numberOfCurrentApplicants`, `maxNumberOfApplicants`) VALUES ('MECH9', ' Study of lubricant and application method for enhanced surface finish and reduced draw load on cold drawn steel tubes', 'Cold-drawing,lubricating drawing', 'Mechanical', 'ONGOING', 'MECH5', '0', '8');
+
+-- Application Logic
+-- UPDATE `dbsproject`.`portal_project`
+-- SET `dbsproject`.`portal_project`.numberOfCurrentApplicants = numberOfCurrentApplicants + 1
+-- WHERE object.projectId = portal_project.projectId;
+
+
+-- Status Updation Logic (when maximum number of Applications are received, status changes from RECRUITING to ONGOING
+-- UPDATE `dbsproject`.`portal_project`
+-- SET projectStatus == "ONGOING"
+-- WHERE numberOfCurrentApplicants >= maxNumberOfApplicants;
+
+
+-- cseProfView 
+CREATE VIEW csProfView as
+SELECT * 
+FROM portal_professor
+WHERE deptId = "CS";
+
+-- eeeProfView 
+CREATE VIEW eeeProfView as
+SELECT * 
+FROM portal_professor
+WHERE deptId = "EEE";
+
+-- civProfView 
+CREATE VIEW civProfView as
+SELECT * 
+FROM portal_professor
+WHERE deptId = "CIV";
+
+-- mechProfView 
+CREATE VIEW mechProfView as
+SELECT * 
+FROM portal_professor
+WHERE deptId = "MECH";
+
+
+-- profProjectView (Displays Projects of every prof)
+-- for loop for every prof
+-- CREATE VIEW profProjectView as
+-- SELECT * 
+-- FROM portal_project
+-- WHERE portal_project.profId = profId;
+
+
+-- OTHER QUERIES TO BE IMPLEMENTED AFTER EXPANDING WEB DESIGN (for future)
+
+drop view Recruiting;
+
+-- All Projects which are of status RECRUITING
+Create view Recruiting as
+SELECT *
+FROM portal_project
+WHERE projectStatus = "RECRUITING";
+
+
+
+-- Projects sorted by most number of people applied
+Create view Sorted as
+SELECT *
+from portal_project
+order by numberOfCurrentApplicants desc;
+
+
+
+
+
 
